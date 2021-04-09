@@ -51,8 +51,7 @@ class TSP:
   def _search_helper(self, curr_bound, curr_weight, level, curr_path, visited):
     if level == self.graph.number_of_vertices:
       if self.graph.matrix[curr_path[level - 1]][curr_path[0]] != 0:
-        curr_res = curr_weight + self.graph.matrix[curr_path[level - 1]]\
-                                    [curr_path[0]]
+        curr_res = curr_weight + self.graph.matrix[curr_path[level - 1]][curr_path[0]]
         if curr_res < self.final_res:
           self._copy_to_final_path(curr_path)
           self.final_res = curr_res
@@ -64,17 +63,13 @@ class TSP:
         curr_weight += self.graph.matrix[curr_path[level - 1]][i]
 
         if level == 1:
-          curr_bound -= ((self._first_min(curr_path[level - 1]) +
-                          self._first_min(i)) / 2)
+          curr_bound -= ((self._first_min(curr_path[level - 1]) + self._first_min(i)) / 2)
         else:
-          curr_bound -= ((self._second_min(curr_path[level - 1]) +
-                          self._first_min(i)) / 2)
+          curr_bound -= ((self._second_min(curr_path[level - 1]) + self._first_min(i)) / 2)
 
         if curr_bound + curr_weight < self.final_res:
           curr_path[level], visited[i] = i, True
-          self._search_helper(
-            curr_bound, curr_weight, level + 1, curr_path, visited
-          )
+          self._search_helper(curr_bound, curr_weight, level + 1, curr_path, visited)
 
         curr_weight -= self.graph.matrix[curr_path[level - 1]][i]
         curr_bound = temp
@@ -88,20 +83,16 @@ class TSP:
     for k in range(self.graph.number_of_vertices):
       if self.graph.matrix[i][k] < min and i != k:
         min = self.graph.matrix[i][k]
-
     return min
 
   def _second_min(self, i):
     first, second = self.maxsize, self.maxsize
-
     for j in range(self.graph.number_of_vertices):
       if i == j: continue
       if self.graph.matrix[i][j] <= first:
-        second = first
-        first = self.graph.matrix[i][j]
+        second, first = first, self.graph.matrix[i][j]
       elif(self.graph.matrix[i][j] <= second and self.graph.matrix[i][j] != first):
         second = self.graph.matrix[i][j]
-
     return second
 
   def _copy_to_final_path(self, curr_path):
